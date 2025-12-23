@@ -1,0 +1,914 @@
+
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="auto">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>سامانه مقالات تحصیلات تکمیلی دانشگاه آزاد اسلامی واحد قشم</title>
+
+  <!-- Bootstrap RTL -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Vazir Font -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet" type="text/css" />
+  <!-- Persian Datepicker -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+  <!-- Tom Select -->
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+
+
+  
+  <style>
+    :root{
+      --brand:#264a7e; --brand-2:#5e84c4; --surface:#ffffff; --surface-2:#f7f9fc;
+      --text:#0f172a; --text-2:#1f2937; --muted:#6b7280; --muted-2:#9aa3b2; --bg:#f1f4fb;
+      --radius-xl:1.25rem; --radius-lg:.9rem;
+      --shadow-lg:0 18px 60px rgba(18,38,63,.10); --shadow-md:0 10px 30px rgba(18,38,63,.08);
+      --ring:0 0 0 .25rem rgba(38,74,126,.20); --divider:rgba(0,0,0,.06);
+      --field-bg:#fff; --field-border:rgba(0,0,0,.10); --field-placeholder:#6b7280;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --surface:#0f1626; --surface-2:#0c1322; --text:#eef3fb; --text-2:#d9e2f1;
+        --muted:#c9d3e5; --muted-2:#aebdd6; --bg:#0a1120; --divider:rgba(255,255,255,.12);
+        --field-bg:#111a2d; --field-border:#314364; --field-placeholder:#d7e0ef;
+      }
+    }
+    [data-theme="light"]{ --surface:#ffffff; --surface-2:#f7f9fc; --text:#0f172a; --text-2:#1f2937; --muted:#6b7280; --muted-2:#9aa3b2; --bg:#f1f4fb; --divider:rgba(0,0,0,.06); --field-bg:#fff; --field-border:rgba(0,0,0,.10); --field-placeholder:#6b7280; }
+    [data-theme="dark"]{ --surface:#0f1626; --surface-2:#0c1322; --text:#eef3fb; --text-2:#d9e2f1; --muted:#c9d3e5; --muted-2:#aebdd6; --bg:#0a1120; --divider:rgba(255,255,255,.12); --field-bg:#111a2d; --field-border:#314364; --field-placeholder:#d7e0ef; }
+
+    *{ font-family: Vazir, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif; }
+    body{
+      color:var(--text);
+      background:
+        radial-gradient(1000px 300px at 90% -10%, rgba(38,74,126,.10), transparent),
+        radial-gradient(1000px 300px at 10% 110%, rgba(94,132,196,.10), transparent),
+        var(--bg);
+      min-height:100vh;
+    }
+
+    .pro-card{ border:0; border-radius:var(--radius-xl); overflow:hidden; background:var(--surface); box-shadow:var(--shadow-lg); }
+    .pro-header{
+      padding:2rem 2rem 1.25rem;
+      background:
+        radial-gradient(100% 100% at 0% 0%, rgba(38,74,126,.18), transparent 60%),
+        radial-gradient(100% 100% at 100% 0%, rgba(94,132,196,.18), transparent 60%),
+        linear-gradient(180deg, rgba(38,74,126,.10), transparent 30%);
+      border-bottom:1px solid var(--divider);
+    }
+    .chip{ display:inline-flex; align-items:center; gap:.5rem; padding:.45rem .85rem; border-radius:999px; background:rgba(38,74,126,.12); color:#1f3a68; font-weight:700; font-size:.95rem; }
+
+    .section{ margin-bottom:2rem; }
+    .section-title{display:flex; align-items:center; gap:.7rem; font-weight:900; font-size:1.07rem; margin-bottom:.9rem;}
+    .badge-step{ border-radius:999px; padding:.35rem .7rem; font-weight:800; background:#e8efff; color:#264a7e; box-shadow:inset 0 -2px 0 rgba(38,74,126,.12); }
+    .divider{height:1px; background:var(--divider); margin:.7rem 0 1.1rem;}
+
+    .form-control, .form-select{ border-radius:.85rem; border:1px solid var(--field-border); background: var(--field-bg); color: var(--text); }
+    .form-control::placeholder{ color:var(--field-placeholder); opacity:1; }
+    .input-group-text{ background: var(--surface-2); color: var(--text-2); border:1px solid var(--field-border); border-radius:.85rem; }
+    .form-control:focus, .form-select:focus{ border-color: transparent; box-shadow: var(--ring); outline: none; }
+
+    .btn-brand{ background:var(--brand); border-color:var(--brand); border-radius:.95rem; box-shadow:0 8px 20px rgba(38,74,126,.30); transition: transform .06s ease, box-shadow .2s ease; }
+    .btn-brand:hover{ transform: translateY(-1px); box-shadow:0 12px 28px rgba(38,74,126,.38); }
+    .btn-outline-primary{ border-radius:.85rem; color:var(--text); border-color:var(--field-border); }
+    .btn-outline-primary:hover{ background:rgba(38,74,126,.10); }
+
+    .hint{ color:var(--muted); font-size:.9rem; }
+    .invalid-feedback{ font-size:.9rem; }
+
+    .status-card, .upload-item, .repeat-item{
+      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.98));
+      border:1px solid var(--field-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(6px) saturate(120%);
+      color: var(--text);
+      padding: 1rem;
+    }
+    @media (prefers-color-scheme: dark){
+      .status-card, .upload-item, .repeat-item{ background: linear-gradient(180deg, rgba(15,22,38,.85), rgba(15,22,38,.98)); }
+    }
+
+    .upload-drop{ border:1px dashed var(--field-border); border-radius:.8rem; background:rgba(2,6,23,.04); padding:1rem; text-align:center; transition: all .2s ease; color: var(--text-2); }
+    [data-theme="dark"] .upload-drop{ background: rgba(255,255,255,.03); }
+    .upload-drop:hover{ background:rgba(38,74,126,.10); }
+
+    .theme-toggle{ border-radius: 999px; padding:.4rem .6rem; background:rgba(255,255,255,.6); border:1px solid var(--field-border); cursor:pointer; color:var(--text); }
+    [data-theme="dark"] .theme-toggle{ background:rgba(255,255,255,.1); }
+
+    .progressbar{ position:sticky; top:0; inset-inline:0; height:4px; background:linear-gradient(90deg, var(--brand), var(--brand-2)); transform-origin: 0 50%; transform: scaleX(0); z-index:1040; border-bottom-left-radius:999px; border-bottom-right-radius:999px; }
+
+    @media print{ .btn, .theme-toggle, .toast, .chip{ display:none !important; } .pro-card{ box-shadow:none } body{ background:#fff } }
+
+    .pdp-default, .persian-datepicker{ color: var(--text); background: var(--surface); border:1px solid var(--field-border); }
+    [data-theme="dark"] .pdp-default, [data-theme="dark"] .persian-datepicker{ color: var(--text); background: var(--surface-2); border-color: var(--field-border); }
+  
+/* ===== Fix dark theme text contrast (no field changes) ===== */
+[data-theme="dark"] body { color: var(--text); }
+
+/* Inputs & selects */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  color: var(--text);
+  background: var(--field-bg);
+  border-color: var(--field-border);
+}
+[data-theme="dark"] .form-control::placeholder { color: var(--field-placeholder); opacity: .75; }
+
+/* Labels, helper texts, validation */
+[data-theme="dark"] .form-label,
+[data-theme="dark"] label { color: var(--text-2); }
+[data-theme="dark"] .hint { color: var(--muted); }
+[data-theme="dark"] .invalid-feedback { color: var(--muted); }
+
+/* Input group text */
+[data-theme="dark"] .input-group-text {
+  background: var(--surface-2);
+  color: var(--text-2);
+  border-color: var(--field-border);
+}
+
+/* Repeat cards / status-card / upload box */
+[data-theme="dark"] .repeat-item,
+[data-theme="dark"] .status-card { color: var(--text); }
+[data-theme="dark"] .upload-drop {
+  background: rgba(255,255,255,.06);
+  border-color: var(--field-border);
+  color: var(--text-2);
+}
+
+/* Buttons (outline variants) */
+[data-theme="dark"] .btn-outline-secondary,
+[data-theme="dark"] .btn-outline-primary {
+  color: var(--text);
+  border-color: var(--field-border);
+}
+[data-theme="dark"] .btn-outline-primary:hover,
+[data-theme="dark"] .btn-outline-secondary:hover { background: rgba(38,74,126,.15); }
+
+/* Toast text contrast */
+[data-theme="dark"] .toast .toast-body { color: var(--text); }
+
+/* Tom Select (dropdown + control) */
+[data-theme="dark"] .ts-control,
+[data-theme="dark"] .ts-control input {
+  background: var(--field-bg);
+  color: var(--text);
+}
+[data-theme="dark"] .ts-dropdown {
+  background: var(--field-bg);
+  border-color: var(--field-border);
+  color: var(--text);
+}
+[data-theme="dark"] .ts-dropdown .option { color: var(--text); }
+[data-theme="dark"] .ts-dropdown .option.active,
+[data-theme="dark"] .ts-dropdown .option:hover,
+[data-theme="dark"] .ts-dropdown .create.active {
+  background: rgba(255,255,255,.08);
+  color: var(--text);
+}
+[data-theme="dark"] .ts-control .item {
+  background: rgba(255,255,255,.06);
+  border-color: var(--field-border);
+  color: var(--text);
+}
+
+/* Persian datepicker */
+[data-theme="dark"] .pdp-default,
+[data-theme="dark"] .persian-datepicker {
+  color: var(--text);
+  background: var(--surface-2);
+  border-color: var(--field-border);
+}
+
+
+/* ===== Strong dark theme fixes: map Bootstrap vars + force contrasts ===== */
+:root[data-theme="dark"] {
+  /* Map Bootstrap body vars to custom palette */
+  --bs-body-bg: var(--bg);
+  --bs-body-color: var(--text);
+  --bs-secondary-color: var(--muted);
+  --bs-link-color: var(--brand-2);
+  --bs-border-color: var(--field-border);
+  --bs-card-bg: var(--surface);
+  --bs-heading-color: var(--text);
+  --bs-tertiary-bg: var(--surface-2);
+  color-scheme: dark;
+}
+
+/* Body & base text */
+[data-theme="dark"] body { color: var(--text) !important; background: var(--bg); }
+
+/* Cards and headers */
+[data-theme="dark"] .card,
+[data-theme="dark"] .pro-card { background: var(--surface) !important; color: var(--text) !important; }
+[data-theme="dark"] .pro-header { background: linear-gradient(180deg, rgba(38,74,126,.18), transparent 30%) !important; border-color: var(--divider) !important; }
+
+/* Labels & texts */
+[data-theme="dark"] .form-label,
+[data-theme="dark"] label,
+[data-theme="dark"] .form-check-label,
+[data-theme="dark"] .section-title { color: var(--text-2) !important; }
+[data-theme="dark"] .hint { color: var(--muted) !important; }
+[data-theme="dark"] .invalid-feedback { color: var(--muted-2) !important; }
+
+/* Inputs & selects (force) */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .input-group-text {
+  background-color: var(--field-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--field-border) !important;
+}
+[data-theme="dark"] .form-control::placeholder { color: var(--field-placeholder) !important; opacity: .8; }
+
+/* Checkboxes / radios */
+[data-theme="dark"] .form-check-input {
+  background-color: var(--surface-2) !important;
+  border-color: var(--field-border) !important;
+}
+
+/* Buttons */
+[data-theme="dark"] .btn-brand { color: #fff !important; }
+[data-theme="dark"] .btn-outline-primary,
+[data-theme="dark"] .btn-outline-secondary {
+  color: var(--text) !important; border-color: var(--field-border) !important;
+}
+[data-theme="dark"] .btn-outline-primary:hover,
+[data-theme="dark"] .btn-outline-secondary:hover {
+  background: rgba(38,74,126,.18) !important;
+}
+
+/* Pills / chips / badges */
+[data-theme="dark"] .chip {
+  background: rgba(255,255,255,.10) !important;
+  color: var(--text-2) !important;
+}
+[data-theme="dark"] .badge-step {
+  background: rgba(255,255,255,.10) !important;
+  color: var(--text-2) !important;
+}
+
+/* Upload box & repeat items */
+[data-theme="dark"] .upload-item,
+[data-theme="dark"] .status-card,
+[data-theme="dark"] .repeat-item {
+  background: linear-gradient(180deg, rgba(15,22,38,.85), rgba(15,22,38,.98)) !important;
+  color: var(--text) !important;
+  border-color: var(--field-border) !important;
+}
+[data-theme="dark"] .upload-drop {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--text-2) !important;
+  border-color: var(--field-border) !important;
+}
+
+/* Toast */
+[data-theme="dark"] .toast { background-color: var(--surface-2) !important; border-color: var(--field-border) !important; }
+[data-theme="dark"] .toast .toast-body { color: var(--text) !important; }
+
+/* Bootstrap icons */
+[data-theme="dark"] .bi { color: var(--text-2) !important; }
+
+/* Tom Select */
+[data-theme="dark"] .ts-control {
+  background: var(--field-bg) !important;
+  color: var(--text) !important;
+  border-color: var(--field-border) !important;
+}
+[data-theme="dark"] .ts-control input { color: var(--text) !important; }
+[data-theme="dark"] .ts-dropdown {
+  background: var(--field-bg) !important;
+  border-color: var(--field-border) !important;
+  color: var(--text) !important;
+}
+[data-theme="dark"] .ts-dropdown .option { color: var(--text) !important; }
+[data-theme="dark"] .ts-dropdown .option.active,
+[data-theme="dark"] .ts-dropdown .option:hover,
+[data-theme="dark"] .ts-dropdown .create.active {
+  background: rgba(255,255,255,.08) !important;
+  color: var(--text) !important;
+}
+[data-theme="dark"] .ts-control .item {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--text) !important;
+  border-color: var(--field-border) !important;
+}
+
+/* Persian datepicker */
+[data-theme="dark"] .pdp-default,
+[data-theme="dark"] .persian-datepicker {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border-color: var(--field-border) !important;
+}
+
+/* Dividers & borders */
+[data-theme="dark"] .divider { background: var(--divider) !important; }
+[data-theme="dark"] .form-control, 
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .ts-control { box-shadow: none !important; }
+
+</style>
+</head>
+<body>
+  <div class="progressbar" id="progressbar" aria-hidden="true"></div>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xxl-8">
+        <div class="card pro-card" aria-labelledby="form-title">
+          <div class="pro-header">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+              <div>
+                <h1 id="form-title" class="h4 mt-3 mb-1">دانشگاه آزاد اسلامی — واحد قشم</h1>
+              </div>
+              <label class="theme-toggle d-flex align-items-center gap-2" title="تغییر حالت روشن/تاریک/خودکار">
+                <i class="bi bi-brightness-high"></i>
+                <input type="checkbox" id="themeSwitch" aria-label="تغییر تم">
+                <i class="bi bi-moon-stars"></i>
+              </label>
+            </div>
+          </div>
+
+          <div class="card-body p-4 p-md-5">
+            
+<!-- =========================== شروع تب‌بندی =========================== -->
+<ul class="nav nav-tabs mb-4" id="articleTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="student-tab" data-bs-toggle="tab"
+                data-bs-target="#student-form" type="button" role="tab">فرم دانشجویان</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="teacher-tab" data-bs-toggle="tab"
+                data-bs-target="#teacher-form" type="button" role="tab">فرم مقالات اساتید</button>
+    </li>
+</ul>
+<div class="tab-content" id="articleTabsContent">
+<div class="tab-pane fade show active" id="student-form" role="tabpanel" aria-labelledby="student-tab">
+<form id="phdReportForm" class="needs-validation" novalidate method="post" action="save_form.php" enctype="multipart/form-data">
+              <!-- Basic -->
+              <div class="section">
+                <div class="section-title"><span class="badge-step">۱</span> مشخصات پایه</div>
+                <div class="divider"></div>
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <label for="university_unit" class="form-label required">نام واحد دانشگاهی</label>
+                    <input type="text" class="form-control" id="university_unit" name="university_unit" required placeholder="مثلاً: واحد قشم" autocomplete="organization">
+                    <div class="invalid-feedback">نام واحد دانشگاهی الزامی است.</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="full_name" class="form-label required">نام و نام خانوادگی</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" required autocomplete="name" placeholder="مثلاً: مهدی آجدانی">
+                    <div class="invalid-feedback">نام و نام خانوادگی را وارد کنید.</div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="student_id" class="form-label required">شماره دانشجویی</label>
+                    <div class="input-group has-validation">
+                      <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                      <input type="text" class="form-control" id="student_id" name="student_id" required pattern="^\d{5,}$" placeholder="حداقل ۵ رقم (فقط عدد)" inputmode="numeric">
+                      <div class="invalid-feedback">شماره دانشجویی معتبر نیست (حداقل ۵ رقم).</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="degree_level" class="form-label required">مقطع</label>
+                    <select class="form-select" id="degree_level" name="degree_level" required>
+                      <option value="" selected>انتخاب کنید…</option>
+                      <option value="MA">کارشناسی ارشد</option>
+                      <option value="PhD">دکتری تخصصی</option>
+                    </select>
+                    <div class="invalid-feedback">لطفاً مقطع را انتخاب کنید.</div>
+                  </div>
+                  <div class="col-12">
+                    <label for="major" class="form-label required">رشته تحصیلی و گرایش (دانشگاه آزاد)</label>
+                    <select id="major" name="major" required placeholder="جست‌وجو کنید…"></select>
+                    <div class="invalid-feedback">رشته/گرایش را انتخاب کنید.</div>
+                    <div class="hint">لیست قابل جست‌وجو است.</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dates with Persian digits -->
+              <div class="section">
+                <div class="section-title"><span class="badge-step">۲</span> تاریخ‌ها</div>
+                <div class="divider"></div>
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <label for="pre_defense_date" class="form-label">تاریخ پیش‌دفاع (اختیاری)</label>
+                    <input type="text" class="form-control jalali fa-digits" id="pre_defense_date" name="pre_defense_date" placeholder="مثلاً ۱۴۰۳/۰۲/۱۵" inputmode="numeric" autocomplete="off">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="final_defense_date" class="form-label">تاریخ دفاع نهایی (اختیاری)</label>
+                    <input type="text" class="form-control jalali fa-digits" id="final_defense_date" name="final_defense_date" placeholder="مثلاً ۱۴۰۳/۰۴/۳۱" inputmode="numeric" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Student status (kept) -->
+              <div class="section">
+                <div class="section-title"><span class="badge-step">۳</span> وضعیت دانشجو در زمان تکمیل فرم</div>
+                <div class="divider"></div>
+                <div class="status-card">
+                  <div class="row g-4 text-center">
+                    <div class="col-12 col-lg-3">
+                      <div class="fw-bold mb-2">فقط پیش دفاع نموده است؟</div>
+                      <div class="d-flex justify-content-center gap-3">
+                        <div class="form-check"><input class="form-check-input" type="radio" name="only_predefense" value="yes" required id="only_predefense_yes"><label class="form-check-label" for="only_predefense_yes">بلی</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="only_predefense" value="no" required id="only_predefense_no"><label class="form-check-label" for="only_predefense_no">خیر</label></div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="fw-bold mb-2">دفاع انجام شده است؟</div>
+                      <div class="d-flex justify-content-center gap-3">
+                        <div class="form-check"><input class="form-check-input" type="radio" name="defense_done" value="yes" required id="defense_done_yes"><label class="form-check-label" for="defense_done_yes">بلی</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="defense_done" value="no" required id="defense_done_no"><label class="form-check-label" for="defense_done_no">خیر</label></div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="fw-bold mb-2">تسویه حساب نهایی انجام داده؟</div>
+                      <div class="d-flex justify-content-center gap-3">
+                        <div class="form-check"><input class="form-check-input" type="radio" name="final_clearance" value="yes" required id="final_clearance_yes"><label class="form-check-label" for="final_clearance_yes">بلی</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="final_clearance" value="no" required id="final_clearance_no"><label class="form-check-label" for="final_clearance_no">خیر</label></div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-3">
+                      <div class="fw-bold mb-2">دانشنامه دریافت کرده؟</div>
+                      <div class="d-flex justify-content-center gap-3">
+                        <div class="form-check"><input class="form-check-input" type="radio" name="degree_received" value="yes" required id="degree_received_yes"><label class="form-check-label" for="degree_received_yes">بلی</label></div>
+                        <div class="form-check"><input class="form-check-input" type="radio" name="degree_received" value="no" required id="degree_received_no"><label class="form-check-label" for="degree_received_no">خیر</label></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Advisors -->
+              <div class="section">
+                <div class="section-title"><span class="badge-step">۴</span> اساتید و مکاتبات</div>
+                <div class="divider"></div>
+                <div class="row g-4">
+                  <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <label class="form-label m-0">استاد(ان) راهنما</label>
+                      <button type="button" id="addAdvisorBtn" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg ms-1"></i> افزودن استاد راهنما</button>
+                    </div>
+                    <div id="advisorsRepeater" class="vstack gap-2" aria-live="polite">
+                      <div class="repeat-item p-2 d-flex align-items-center justify-content-center hint">هیچ نامی ثبت نشده است.</div>
+                    </div>
+                    <div class="invalid-feedback d-none" id="advisorsError">حداقل یک استاد راهنما وارد کنید.</div>
+                  </div>
+                  <div class="col-12">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <label class="form-label m-0">استاد(ان) مشاور (اختیاری)</label>
+                      <button type="button" id="addConsultantBtn" class="btn btn-sm btn-outline-primary"><i class="bi bi-plus-lg ms-1"></i> افزودن استاد مشاور</button>
+                    </div>
+                    <div id="consultantsRepeater" class="vstack gap-2" aria-live="polite">
+                      <div class="repeat-item p-2 d-flex align-items-center justify-content-center hint">هیچ نامی ثبت نشده است.</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="corresponding" class="form-label">نام عهده‌دار مکاتبات (اختیاری)</label>
+                    <input type="text" class="form-control" id="corresponding" name="corresponding" placeholder="مثلاً: دکتر محمدی">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Articles -->
+              <div class="section">
+                <div class="section-title"><span class="badge-step">۵</span> بارگذاری مقالات (افزودن/حذف)</div>
+                <div class="divider"></div>
+                <div id="articlesRepeater" class="vstack gap-3" aria-live="polite"></div>
+                <div class="mt-2 d-flex gap-2 align-items-center">
+                  <button type="button" id="addArticleBtn" class="btn btn-outline-primary"><i class="bi bi-plus-lg ms-1"></i> افزودن مقاله</button>
+                  <span class="hint" id="articleCountHint">هنوز مقاله‌ای اضافه نشده است</span>
+                </div>
+              </div>
+
+              <!-- Notes -->
+              <div class="section">
+                <div class="section-title"><span class="badge-step">۶</span> توضیحات</div>
+                <div class="divider"></div>
+                <textarea id="notes" name="notes" class="form-control" rows="4" placeholder="توضیحات..." maxlength="1000" aria-describedby="notes-help"></textarea>
+                <div class="d-flex justify-content-between">
+                  <div id="notes-help" class="hint">حداکثر ۱۰۰۰ کاراکتر.</div>
+                  <div class="hint"><span id="notes-count">0</span>/1000</div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div class="form-check m-0">
+                  <input class="form-check-input" type="checkbox" id="confirm" required>
+                  <label class="form-check-label" for="confirm">صحت اطلاعات فوق را تایید می‌کنم</label>
+                  <div class="invalid-feedback">برای ادامه باید صحت اطلاعات را تایید کنید.</div>
+                </div>
+                <div class="d-flex gap-2">
+                  <button type="button" id="saveDraftBtn" class="btn btn-outline-secondary">
+                    <i class="bi bi-cloud-arrow-down ms-1"></i> ذخیره پیش‌نویس
+                  </button>
+                  <button id="submitBtn" type="submit" class="btn btn-brand px-4">
+                    <span class="submit-text"><i class="bi bi-send ms-1"></i> ارسال فرم</span>
+                    <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+                  </button>
+                </div>
+              </div>
+            </form>
+</div> <!-- پایان تب دانشجویان -->
+
+<!-- ======================= تب اساتید ======================= -->
+<div class="tab-pane fade" id="teacher-form" role="tabpanel" aria-labelledby="teacher-tab">
+<form action="save_teacher.php" method="post" enctype="multipart/form-data" class="row g-4">
+    <div class="col-md-6"><label class="form-label">نام استاد *</label>
+        <input type="text" name="teacher_name" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label">تعداد همکاران</label>
+        <input type="number" name="coworkers_count" class="form-control"></div>
+    <div class="col-12"><label class="form-label">نام همکاران</label>
+        <textarea name="coworkers_names" class="form-control"></textarea></div>
+    <div class="col-md-6"><label class="form-label">نویسنده مسئول</label>
+        <input type="text" name="corresponding_author" class="form-control"></div>
+    <div class="col-12"><label class="form-label">عنوان مقاله *</label>
+        <input type="text" name="article_title" class="form-control" required></div>
+    <div class="col-md-6"><label class="form-label">نام مجله *</label>
+        <input type="text" name="journal_name" class="form-control" required></div>
+    <div class="col-md-3"><label class="form-label">تاریخ چاپ</label>
+        <input type="text" name="publish_date" class="form-control jalali fa-digits" placeholder="مثلاً ۱۴۰۳/۰۳/۱۲" autocomplete="off"></div>
+    <div class="col-12"><label class="form-label">لینک مقاله</label>
+        <input type="url" name="article_link" class="form-control"></div>
+    <div class="col-md-6"><label class="form-label">فایل مقاله (PDF)</label>
+        <input type="file" name="article_file" class="form-control" accept="application/pdf"></div>
+    <div class="col-md-6"><label class="form-label">نوع مجله</label>
+        <select name="journal_type" class="form-select">
+            <option value="">انتخاب کنید</option>
+            <option value="علمی پژوهشی">علمی پژوهشی</option>
+            <option value="علمی ترویجی">علمی ترویجی</option>
+            <option value="ISC">ISC</option>
+            <option value="ISI">ISI</option>
+            <option value="Scopus">Scopus</option>
+            <option value="داخلی">داخلی</option>
+            <option value="بین‌المللی">بین‌المللی</option>
+        </select></div>
+    
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mt-4">
+
+    <div class="form-check m-0">
+        <input class="form-check-input" type="checkbox" id="teacher_confirm" required>
+        <label class="form-check-label" for="teacher_confirm">صحت اطلاعات فوق را تایید می‌کنم</label>
+        <div class="invalid-feedback">برای ادامه باید صحت اطلاعات را تایید کنید.</div>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="button" id="teacher_saveDraftBtn" class="btn btn-outline-secondary">
+            <i class="bi bi-cloud-arrow-down ms-1"></i> ذخیره پیش‌نویس
+        </button>
+
+        <button id="teacher_submitBtn" type="submit" class="btn btn-brand px-4">
+            <span class="submit-text"><i class="bi bi-send ms-1"></i> ارسال فرم</span>
+            <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>
+        </button>
+    </div>
+
+</div>
+
+</form>
+</div> <!-- پایان تب اساتید -->
+</div> <!-- پایان tab-content -->
+
+          </div>
+        </div>
+
+        <!-- Toast -->
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
+          <div id="liveToast" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body">پیام وضعیت اینجا نمایش داده می‌شود.</div>
+              <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="بستن"></button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js">
+// ==== Teacher Form Draft ====
+const TEACHER_DRAFT_KEY = 'teacherFormDraft_v1';
+const teacherForm = document.querySelector('#teacher-form form');
+
+document.getElementById('teacher_saveDraftBtn').addEventListener('click', () => {
+    try {
+        const fd = new FormData(teacherForm);
+        const obj = {};
+        fd.forEach((v,k)=>{ obj[k]=v; });
+        localStorage.setItem(TEACHER_DRAFT_KEY, JSON.stringify(obj));
+        showToast('پیش‌نویس فرم اساتید ذخیره شد.', 'success');
+    } catch(e){
+        showToast('خطا در ذخیره پیش‌نویس فرم اساتید.', 'danger');
+    }
+});
+
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+  <script>
+    // Theme toggle (auto / light / dark)
+    const themeEl = document.documentElement;
+    const switchEl = document.getElementById('themeSwitch');
+    const savedTheme = localStorage.getItem('form_theme_v35');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    function applyTheme(mode){
+      themeEl.setAttribute('data-theme', mode);
+      localStorage.setItem('form_theme_v35', mode);
+      switchEl.checked = (mode === 'dark') || (mode === 'auto' && prefersDark);
+    }
+    applyTheme(savedTheme || 'auto');
+    switchEl.addEventListener('change', () => {
+      const current = themeEl.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : current === 'light' ? 'auto' : 'dark';
+      applyTheme(next);
+    });
+
+    // Scroll progress
+    const pb = document.getElementById('progressbar');
+    function setProgress(){
+      const h = document.documentElement;
+      const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+      pb.style.transform = `scaleX(${scrolled})`;
+    }
+    document.addEventListener('scroll', setProgress, { passive:true }); setProgress();
+
+    // --- Persian digits helpers ---
+    const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+    const enDigits = ['0','1','2','3','4','5','6','7','8','9'];
+    function toFa(str){ return (str||'').toString().replace(/[0-9]/g, d => faDigits[d]); }
+    function toEn(str){ return (str||'').toString().replace(/[۰-۹]/g, d => enDigits[faDigits.indexOf(d)] || d); }
+
+    // Datepickers + force Persian digits in inputs
+    $(function(){
+      $('.jalali').persianDatepicker({ format: 'YYYY/MM/DD', initialValue: false, autoClose: true, calendarType: 'persian' });
+
+      document.querySelectorAll('.fa-digits').forEach((el)=>{
+        const syncFa = () => { el.value = toFa(el.value); };
+        const normalize = () => {
+          const en = toEn(el.value);
+          el.value = toFa(en);                 // show Persian
+          el.dataset.enValue = en;             // keep English for submit if needed
+        };
+        el.addEventListener('input', normalize);
+        el.addEventListener('change', normalize);
+        el.addEventListener('blur', normalize);
+
+        // If datepicker sets value (attribute change), re-sync Persian
+        const mo = new MutationObserver(()=> normalize());
+        mo.observe(el, { attributes:true, attributeFilter:['value'] });
+      });
+    });
+
+    // Tom Select (majors)
+    const STARTER_MAJORS = [
+      {level:'MA', group:'فنی و مهندسی', text:'مهندسی کامپیوتر — نرم‌افزار'},
+      {level:'MA', group:'فنی و مهندسی', text:'مهندسی کامپیوتر — هوش مصنوعی'},
+      {level:'MA', group:'فنی و مهندسی', text:'مهندسی فناوری اطلاعات (IT)'},
+      {level:'MA', group:'فنی و مهندسی', text:'مهندسی برق — قدرت'},
+      {level:'MA', group:'علوم انسانی', text:'مدیریت بازرگانی — بازاریابی'},
+      {level:'MA', group:'علوم انسانی', text:'حسابداری'},
+      {level:'MA', group:'علوم انسانی', text:'حقوق — خصوصی'},
+      {level:'MA', group:'علوم انسانی', text:'روانشناسی — بالینی'},
+      {level:'PhD', group:'فنی و مهندسی', text:'مهندسی کامپیوتر — هوش مصنوعی'},
+      {level:'PhD', group:'فنی و مهندسی', text:'مهندسی برق — قدرت'},
+      {level:'PhD', group:'علوم انسانی', text:'مدیریت — رفتار سازمانی'},
+      {level:'PhD', group:'علوم انسانی', text:'حسابداری'},
+      {level:'PhD', group:'علوم انسانی', text:'حقوق — خصوصی'},
+      {level:'PhD', group:'علوم انسانی', text:'روانشناسی — سلامت'}
+    ];
+    function buildOptions(level, list){
+      const groups = {}; list.filter(x => !level || x.level === level).forEach(x => { (groups[x.group] = groups[x.group] || []).push(x); });
+      const frag = document.createDocumentFragment();
+      Object.keys(groups).forEach(g => {
+        const optgroup = document.createElement('optgroup'); optgroup.label = g;
+        groups[g].forEach(item => { const opt = document.createElement('option'); opt.value = item.text; opt.textContent = item.text; optgroup.appendChild(opt); });
+        frag.appendChild(optgroup);
+      });
+      return frag;
+    }
+    let majorSelect;
+    function initMajorSelect(){
+      if(majorSelect){ majorSelect.destroy(); }
+      majorSelect = new TomSelect('#major', {
+        create:false, maxItems:1, sortField:{field:'text',direction:'asc'},
+        placeholder:'رشته/گرایش را جست‌وجو کنید…', persist:false,
+        render: { option: (data, escape) => '<div>' + escape(data.text) + '</div>' }
+      });
+    }
+    function refreshMajors(level){
+      const sel = document.getElementById('major');
+      sel.innerHTML = ''; sel.appendChild(buildOptions(level, STARTER_MAJORS)); initMajorSelect();
+    }
+    document.getElementById('degree_level').addEventListener('change', (e)=>{ refreshMajors(e.target.value || null); });
+    refreshMajors(null);
+
+    // Name repeater
+    function setupNameRepeater(containerId, addBtnId, inputName, placeholder){
+      const container = document.getElementById(containerId);
+      const addBtn = document.getElementById(addBtnId);
+      const MAX = 10;
+      function ensureEmpty(){
+        if(!container.querySelector('.repeat-item')){
+          const d = document.createElement('div'); d.className='repeat-item p-2 d-flex align-items-center justify-content-center hint'; d.textContent='هیچ نامی ثبت نشده است.'; container.appendChild(d);
+        }
+      }
+      function clearEmpty(){
+        const first = container.querySelector('.repeat-item');
+        if(first && !first.querySelector('input')) first.remove();
+      }
+      function addItem(value=''){
+        const count = container.querySelectorAll('.repeat-item input').length;
+        if(count >= MAX){ showToast('حداکثر ۱۰ نام می‌توانید اضافه کنید.'); return; }
+        clearEmpty();
+        const wrap = document.createElement('div'); wrap.className = 'repeat-item p-2';
+        wrap.innerHTML = `
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-badge fs-5 opacity-75" aria-hidden="true"></i>
+            <input type="text" name="${inputName}[]" class="form-control" placeholder="${placeholder}" value="${value.replace(/"/g,'&quot;')}" required>
+            <button type="button" class="btn btn-outline-danger" aria-label="حذف"><i class="bi bi-trash"></i></button>
+          </div>
+        `;
+        wrap.querySelector('button').addEventListener('click', () => { wrap.remove(); ensureEmpty(); });
+        container.appendChild(wrap);
+      }
+      addBtn.addEventListener('click', () => addItem());
+      ensureEmpty();
+      return { addItem };
+    }
+    setupNameRepeater('advisorsRepeater', 'addAdvisorBtn', 'advisors', 'نام استاد راهنما');
+    setupNameRepeater('consultantsRepeater', 'addConsultantBtn', 'consultants', 'نام استاد مشاور');
+
+    // Articles repeater
+    const repeater = document.getElementById('articlesRepeater');
+    const addBtn = document.getElementById('addArticleBtn');
+    const hint = document.getElementById('articleCountHint');
+    const MAX_ITEMS = 10;
+    const MAX_SIZE = 15 * 1024 * 1024;
+    let counter = 0;
+    function updateHint(){ const n = repeater.querySelectorAll('.upload-item').length; hint.textContent = n ? `${n} مقاله اضافه شده` : 'هنوز مقاله‌ای اضافه نشده است'; }
+    function createUploadItem(){
+      counter += 1; const idx = counter;
+      const el = document.createElement('div'); el.className = 'upload-item p-3';
+      el.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="fw-bold"><span class="badge bg-light text-primary border">مقاله #${idx}</span> <span class="hint">(PDF/DOC/DOCX)</span></div>
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm preview-btn" aria-label="پیش‌نمایش مقاله #${idx}"><i class="bi bi-eye"></i></button>
+            <button type="button" class="btn btn-outline-danger btn-sm remove-btn" aria-label="حذف مقاله #${idx}"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">وضعیت</label>
+            <select name="article_statuses[]" class="form-select">
+              <option value="" selected>انتخاب کنید…</option>
+              <option value="accepted">پذیرش</option>
+              <option value="published">چاپ</option>
+              <option value="unknown">نامشخص</option>
+            </select>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label">فایل مقاله</label>
+            <div class="upload-drop" tabindex="0">
+              <input type="file" class="d-none file-input" accept=".pdf,.doc,.docx" name="article_files[]">
+              <div class="small hint">فایل را بکشید و رها کنید یا برای انتخاب کلیک کنید</div>
+              <div class="file-meta mt-1 d-none"></div>
+            </div>
+          </div>
+          <div class="col-12">
+            <label class="form-label">لینک مقاله (اختیاری)</label>
+            <input type="url" class="form-control" name="article_links[]" placeholder="https://">
+          </div>
+        </div>
+      `;
+      const drop = el.querySelector('.upload-drop');
+      const input = el.querySelector('.file-input');
+      const meta = el.querySelector('.file-meta');
+      const removeBtn = el.querySelector('.remove-btn');
+      const previewBtn = el.querySelector('.preview-btn');
+      drop.addEventListener('click', () => input.click());
+      drop.addEventListener('keypress', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+      drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.style.boxShadow='var(--ring)'; });
+      drop.addEventListener('dragleave', () => drop.style.boxShadow='none');
+      drop.addEventListener('drop', (e) => { e.preventDefault(); drop.style.boxShadow='none'; if(e.dataTransfer.files && e.dataTransfer.files[0]){ input.files = e.dataTransfer.files; onFileSelected(); } });
+      input.addEventListener('change', onFileSelected);
+      function onFileSelected(){
+        const f = input.files[0];
+        if(!f) { meta.classList.add('d-none'); meta.textContent=''; return; }
+        if(!/\.(pdf|doc|docx)$/i.test(f.name)){ alert('فقط فایل‌های PDF/DOC/DOCX مجاز است.'); input.value = ''; meta.classList.add('d-none'); return; }
+        if(f.size > MAX_SIZE){ alert('حجم هر فایل نباید بیش از 15MB باشد.'); input.value=''; meta.classList.add('d-none'); return; }
+        meta.textContent = `انتخاب شده: ${f.name} (${(f.size/1024/1024).toFixed(2)} MB)`;
+        meta.classList.remove('d-none');
+      }
+      removeBtn.addEventListener('click', () => { el.remove(); updateHint(); addBtn.disabled = false; });
+      previewBtn.addEventListener('click', () => {
+        const f = input.files[0];
+        if(!f){ showToast('ابتدا فایل را انتخاب کنید.'); return; }
+        if(f.type === 'application/pdf'){
+          const url = URL.createObjectURL(f); window.open(url, '_blank', 'noopener'); setTimeout(() => URL.revokeObjectURL(url), 20000);
+        }else{ showToast('پیش‌نمایش فقط برای PDF امکان‌پذیر است.'); }
+      });
+      return el;
+    }
+    function addItem(){
+      const n = repeater.querySelectorAll('.upload-item').length;
+      if(n >= MAX_ITEMS){ showToast('حداکثر ۱۰ مقاله می‌توانید اضافه کنید.'); return; }
+      const item = createUploadItem(); repeater.appendChild(item); updateHint(); if(n+1 >= MAX_ITEMS) addBtn.disabled = true;
+    }
+    addBtn.addEventListener('click', addItem);
+
+    // Notes counter
+    const notes = document.getElementById('notes'); const notesCount = document.getElementById('notes-count');
+    notes.addEventListener('input', () => { notesCount.textContent = notes.value.length.toString(); });
+
+    // Toast helper
+    const showToast = (msg, variant='info') => {
+      const toastEl = document.getElementById('liveToast'); const body = toastEl.querySelector('.toast-body');
+      body.textContent = msg;
+      toastEl.classList.remove('text-bg-success','text-bg-danger','text-bg-info','text-bg-warning');
+      const map = { success:'text-bg-success', danger:'text-bg-danger', info:'text-bg-info', warning:'text-bg-warning' };
+      toastEl.classList.add(map[variant] || 'text-bg-info'); new bootstrap.Toast(toastEl).show();
+    };
+
+    // Validation (basic, keep from previous)
+    const form = document.getElementById('phdReportForm');
+    const requiredMsgs = {
+      university_unit: 'نام واحد دانشگاهی الزامی است.',
+      full_name: 'نام و نام خانوادگی را وارد کنید.',
+      student_id: 'شماره دانشجویی معتبر نیست (حداقل ۵ رقم).',
+      degree_level: 'لطفاً مقطع را انتخاب کنید.',
+      major: 'رشته/گرایش را انتخاب کنید.',
+      confirm: 'برای ادامه باید صحت اطلاعات را تایید کنید.'
+    };
+    function setMessage(el){
+      const id = el.id || el.name;
+      el.setCustomValidity('');
+      if(el.validity.valueMissing){ el.setCustomValidity(requiredMsgs[id] || 'این فیلد الزامی است.'); }
+      else if(el.validity.patternMismatch){ el.setCustomValidity(requiredMsgs[id] || 'قالب وارد شده صحیح نیست.'); }
+    }
+    form.querySelectorAll('input[required], select[required], textarea[required]').forEach(el => {
+      el.addEventListener('invalid', ()=> setMessage(el));
+      el.addEventListener('input', ()=> el.setCustomValidity(''));
+      el.addEventListener('change', ()=> el.setCustomValidity(''));
+    });
+
+    // Require at least 1 advisor
+    function validateAdvisors(){
+      const hasAny = document.querySelectorAll('input[name="advisors[]"]').length > 0;
+      const err = document.getElementById('advisorsError');
+      if(!hasAny){ err.classList.remove('d-none'); } else { err.classList.add('d-none'); }
+      return hasAny;
+    }
+
+    // Save Draft
+    const DRAFT_KEY = 'phdReportFormDraft_v35';
+    document.getElementById('saveDraftBtn').addEventListener('click', ()=>{
+      try{
+        const fd = new FormData(form);
+        const obj = {}; fd.forEach((v,k) => { if(obj[k]){ if(Array.isArray(obj[k])) obj[k].push(v); else obj[k] = [obj[k], v]; } else { obj[k]=v; } });
+        ['only_predefense','defense_done','final_clearance','degree_received'].forEach(name => { const el = form.querySelector(`input[name="${name}"]:checked`); if(el) obj[name] = el.value; });
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(obj));
+        showToast('پیش‌نویس ذخیره شد.', 'success');
+      }catch(e){ showToast('ذخیره پیش‌نویس ناموفق بود.', 'danger'); }
+    });
+
+   
+
+
+form.addEventListener('submit', (e) => {
+
+  // Validation
+  if (!form.checkValidity() || !validateAdvisors()) {
+    e.preventDefault();
+    e.stopPropagation();
+    form.classList.add('was-validated');
+
+    const firstInvalid = form.querySelector(':invalid') || document.getElementById('advisorsError');
+    if (firstInvalid) {
+      const y = firstInvalid.getBoundingClientRect().top + window.scrollY - 120;
+      window.scrollTo({ top: y, behavior:'smooth' });
+    }
+
+    showToast('لطفاً خطاهای مشخص شده را برطرف کنید.', 'warning');
+    return;
+  }
+
+ 
+
+  showToast('در حال ارسال...', 'info');
+});
+
+
+
+  </script>
+</body>
+</html>
+
