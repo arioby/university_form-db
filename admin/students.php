@@ -1,45 +1,27 @@
 <?php
-require '../db.php';
 require 'auth.php';
-
-$search = $_GET['q'] ?? '';
-
-$sql = "SELECT * FROM students WHERE full_name LIKE ? OR student_id LIKE ? ORDER BY id DESC";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(["%$search%", "%$search%"]);
-$students = $stmt->fetchAll();
-
-
+require '../db.php';
 
 $students = $pdo->query("
-  SELECT id, full_name, student_id, degree_level, major, created_at
-  FROM students
-  ORDER BY id DESC
-")->fetchAll();
+    SELECT id, full_name, student_id, degree_level, major, created_at
+    FROM students
+    ORDER BY id DESC
+")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>دانشجویان</title>
+<title>فرم‌های دانشجویان</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-<a href="export_full_students.php" class="btn btn-success mb-3">
-  📥 دانلود فرم
-</a>
-
 </head>
 <body class="bg-light">
-    
 
 <div class="container py-4">
-  <h4 class="mb-3">📄 لیست دانشجویان</h4>
-  <form class="mb-3">
-  <input name="q" class="form-control" placeholder="جستجو نام یا شماره دانشجویی">
-</form>
+  <h4 class="mb-3">📄 فرم‌های دانشجویان</h4>
 
-
-  <table class="table table-bordered table-hover bg-white shadow-sm">
+  <table class="table table-bordered table-hover bg-white shadow-sm align-middle">
     <thead class="table-light">
       <tr>
         <th>#</th>
@@ -48,7 +30,7 @@ $students = $pdo->query("
         <th>مقطع</th>
         <th>رشته</th>
         <th>تاریخ</th>
-        <th>جزئیات</th>
+        <th style="width:140px">جزئیات</th>
       </tr>
     </thead>
     <tbody>
@@ -60,10 +42,18 @@ $students = $pdo->query("
         <td><?= $s['degree_level'] ?></td>
         <td><?= htmlspecialchars($s['major']) ?></td>
         <td><?= $s['created_at'] ?></td>
+
         <td>
-          <a class="btn btn-sm btn-primary"
-             href="student_view.php?id=<?= $s['id'] ?>">
+          <!-- View -->
+          <a href="student_view.php?id=<?= $s['id'] ?>"
+             class="btn btn-sm btn-primary w-100 mb-1">
              مشاهده
+          </a>
+
+          <!-- Excel download -->
+          <a href="export_student.php?id=<?= $s['id'] ?>"
+             class="btn btn-sm btn-success w-100">
+             دانلود Excel
           </a>
         </td>
       </tr>

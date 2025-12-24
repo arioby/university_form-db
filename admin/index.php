@@ -55,6 +55,20 @@ $articlesCount = $pdo->query("SELECT COUNT(*) FROM student_articles")->fetchColu
 
   <a href="students.php" class="btn btn-primary">📄 فرم‌های دانشجویان</a>
   <a href="teachers.php" class="btn btn-secondary">📚 مقالات اساتید</a>
+  <a href="student_articles.php" class="btn btn-warning">
+  📝 مقالات دانشجویی
+</a>
+  <a href="teacher_articles.php" class="btn btn-info">
+  📚 مقالات اساتید
+</a>
+<a href="logout.php"
+   class="btn btn-danger"
+   onclick="return confirm('آیا می‌خواهید خارج شوید؟')">
+   🚪 خروج
+</a>
+
+
+
 </div>
 
 </body>

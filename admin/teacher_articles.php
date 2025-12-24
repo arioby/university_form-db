@@ -3,7 +3,15 @@ require 'auth.php';
 require '../db.php';
 
 $rows = $pdo->query("
-    SELECT id, teacher_name, article_title, journal_name, journal_type, created_at
+    SELECT
+        id,
+        teacher_name,
+        article_title,
+        journal_name,
+        journal_type,
+        article_link,
+        article_file,
+        created_at
     FROM teacher_articles
     ORDER BY id DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
@@ -13,13 +21,13 @@ $rows = $pdo->query("
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="utf-8">
-<title>فرم‌های اساتید</title>
+<title>مقالات اساتید</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
 <div class="container py-4">
-  <h4 class="mb-3">📚 فرم‌های اساتید</h4>
+  <h4 class="mb-3">📚 مقالات اساتید</h4>
 
   <table class="table table-bordered table-hover bg-white shadow-sm align-middle">
     <thead class="table-light">
@@ -29,8 +37,8 @@ $rows = $pdo->query("
         <th>عنوان مقاله</th>
         <th>مجله</th>
         <th>نوع</th>
-        <th>تاریخ</th>
-        <th style="width:140px">جزئیات</th>
+        <th>فایل / لینک</th>
+        <th style="width:180px">عملیات</th>
       </tr>
     </thead>
     <tbody>
@@ -41,10 +49,24 @@ $rows = $pdo->query("
         <td><?= htmlspecialchars($r['article_title']) ?></td>
         <td><?= htmlspecialchars($r['journal_name']) ?></td>
         <td><?= $r['journal_type'] ?></td>
-        <td><?= $r['created_at'] ?></td>
 
         <td>
-          <!-- Excel download -->
+          <?php if ($r['article_file']): ?>
+            <a href="../<?= $r['article_file'] ?>" target="_blank">
+              📄 دانلود PDF
+            </a>
+          <?php endif; ?>
+
+          <?php if ($r['article_link']): ?>
+            <?php if ($r['article_file']) echo ' | '; ?>
+            <a href="<?= $r['article_link'] ?>" target="_blank">
+              🔗 لینک
+            </a>
+          <?php endif; ?>
+        </td>
+
+        <td>
+          <!-- Excel export -->
           <a href="export_teacher.php?id=<?= $r['id'] ?>"
              class="btn btn-sm btn-success w-100">
              دانلود Excel
